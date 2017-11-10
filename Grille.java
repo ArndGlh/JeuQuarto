@@ -1,16 +1,18 @@
-import javax.swing.JFrame;
+import java.util.ArrayList;
 
-public class Grille extends JFrame{
+public class Grille {
 	
 	// Attributs --------------------------------------------------------
 	private Pion[] pions; // tableau des pions de la grille
 	private String[] colonneUn;   // "|1| "
 	private String[] colonneDeux; // "|      "
-	private String[] colonneTrois;
-	private String[] cases;       // "|     |"
+	private String[] cases;       // "|     |"  Pour l'affichage
+	private Pion[] listeCase; // tableau des cases épurées pour calculer siGagne()
 	private boolean [] pionRestant;  // tab des pions restant (true = dispo; false = non dispo)
 	private boolean [] caseRestante; // tab des cases restantes (true = dispo; false = non dispo) 
 	private static final int taille = 16; // taille des différents tableaux
+	private static final int[] listeComb = new int[40]; // Liste des combinaisons a tester pour le gain
+	
 	// ------------------------------------------------------------------
 
 	public Grille () {
@@ -20,10 +22,10 @@ public class Grille extends JFrame{
 		colonneUn = new String [taille];
 		colonneDeux = new String [taille];
 		cases = new String [taille];
-		pionRestant = new boolean[16];
-		caseRestante = new boolean[16];
+		pionRestant = new boolean[taille];
+		caseRestante = new boolean[taille];
+		listeCase = new Pion[taille];
 		//-----------------------------------------------------------------
-		
 		
 		for (int i=0; i<pionRestant.length; i++){  // initialisation pionRestant[]
 			pionRestant[i] = true;
@@ -72,19 +74,73 @@ public class Grille extends JFrame{
 		pions[15] = new Pion("G", "N", "V", "R");
 		//---------------------------------------
 		
+		// INITIALISATION LISTE GAIN ------------
+		// Lignes
+		for(int i=0; i<16; i++){
+			Grille.listeComb[i] = i;
+		}
+		
+		// Colonnes
+		Grille.listeComb[16] = 0;
+		Grille.listeComb[17] = 4;
+		Grille.listeComb[18] = 8;
+		Grille.listeComb[19] = 12;
+		
+		Grille.listeComb[20] = 1;
+		Grille.listeComb[21] = 5;
+		Grille.listeComb[22] = 9;
+		Grille.listeComb[23] = 13;
+		
+		Grille.listeComb[24] = 2;
+		Grille.listeComb[25] = 6;
+		Grille.listeComb[26] = 10;
+		Grille.listeComb[27] = 14;
+		
+		Grille.listeComb[28] = 3;
+		Grille.listeComb[29] = 7;
+		Grille.listeComb[30] = 11;
+		Grille.listeComb[31] = 15;
+		
+		// Diagonales
+		Grille.listeComb[32] = 0;
+		Grille.listeComb[33] = 5;
+		Grille.listeComb[34] = 10;
+		Grille.listeComb[35] = 15;
+		
+		Grille.listeComb[36] = 3;
+		Grille.listeComb[37] = 6;
+		Grille.listeComb[38] = 9;
+		Grille.listeComb[39] = 12;
+		
+		// INITIALISATION LISTECASES ------------
+		
+		for(int i=0; i<this.listeCase.length; i++){
+			//this.listeCase[i] = new Pion(" ", " ", " ", " ");
+		}
+
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------
 	// ---------------------------------------------METHODES UTILES----------------------------------------------
 	// ----------------------------------------------------------------------------------------------------------
 
-	public String getPion (int i){ // retourne un String du pion à l'indice i 
-		
-		return this.pions[i].toString();
+	public Pion getPion (int i){ // retourne un String du pion à l'indice i 
+		return this.pions[i];
+	}
+	
+	public void setListeCase(Pion p, int i){		
+		this.listeCase[i] = new Pion(p.getTaille(), p.getCouleur(), p.getInterieur(), p.getForme());
+	}
+	
+	public Pion[] getListeCase(){
+		return this.listeCase;
+	}
+	
+	public static int getListeComb(int i){
+		return Grille.listeComb[i];
 	}
 	
 	public void setCase (String pion, int indice){ // concatène le pion dans la case du tableau de cases
-		
 		this.cases[indice] = "|"+pion+"|";
 	}
 	
@@ -92,15 +148,15 @@ public class Grille extends JFrame{
 		this.pions[i].setNull();
 	}
 	
-	public boolean getPionRestant(int i) { // retourne true si le pion à l'indice i est disponible
+	public boolean getPionRestant(int i){ // retourne true si le pion à l'indice i est disponible
 		return pionRestant[i-1];
 	}
 
-	public void setPionRestantI(int i, boolean b) { // modifie le tableau des pions restants. En général b = false
+	public void setPionRestantI(int i, boolean b){ // modifie le tableau des pions restants. En général b = false
 		this.pionRestant[i-1] = b;
 	}
 
-	public void setCaseRestanteI(int i, boolean b) { // modifie le tableau des cases restantes. En général b = false
+	public void setCaseRestanteI(int i, boolean b){ // modifie le tableau des cases restantes. En général b = false
 		this.caseRestante[i] = b;
 	}
 	
@@ -116,7 +172,7 @@ public class Grille extends JFrame{
 		for (int i=0; i<taille; i++){
 			
 			res += this.colonneUn[i];
-			res += this.pions[i].toString();
+			res += this.pions[i].toStringPion();
 			res += this.colonneDeux[i];
 			
 			if(i==0) res += this.cases[0]+this.cases[1]+this.cases[2]+this.cases[3];
@@ -136,7 +192,7 @@ public class Grille extends JFrame{
 		
 		c = Integer.parseInt(colonne);
 		if (ligne.equals("A")) i = c -1;
-		else if (ligne.equals("B")) i = c +3 ;
+		else if (ligne.equals("B")) i = c +3;
 		else if (ligne.equals("C")) i = c +7;
 		else if (ligne.equals("D")) i = c + 11;
 		
@@ -164,13 +220,52 @@ public class Grille extends JFrame{
 		else {System.out.println("Erreur : La case n'existe pas"); return false;}
 	}
 	
-	public void modifCase (String pion, String s){ // Effectue les modifications dans les attributs pour que la case ne soit plus dispo
-		
+	public void modifCase (Pion pion, String s){ // Effectue les modifications dans les attributs pour que la case ne soit plus dispo
+
+		String pionString = pion.toStringPion();
 		String[] position = transfo(s);
 		int indiceC = recupCase(position[0], position[1]);
 		
-		this.setCase(pion, indiceC);
+		this.setCase(pionString, indiceC); // Pour affichage
+		this.setListeCase(pion, indiceC); // Pour gestion de gain
 		this.setCaseRestanteI(indiceC, false);
 	}
 	
+	/*
+	 * renvois une ArrayList<String> selon : [0]: le critère qui fait gagner
+	 * 							  			 [1]: listeComb[j]
+	 */
+	public ArrayList<String> gagne (){
+		
+		ArrayList<String> res = new ArrayList<String>();
+		
+		for(int i=0; i< Grille.listeComb.length; i+=4){
+			if(this.listeCase[Grille.listeComb[i]] != null && this.listeCase[Grille.listeComb[i+1]] != null && this.listeCase[Grille.listeComb[i+2]] != null && this.listeCase[Grille.listeComb[i+3]] != null){
+				if( this.listeCase[Grille.listeComb[i]].memeCouleur(this.listeCase[Grille.listeComb[i+1]], this.listeCase[Grille.listeComb[i+2]], this.listeCase[Grille.listeComb[i+3]])){
+					// Gain par les couleurs, case j à j+4
+					res.add("couleur");
+					res.add(Integer.toString(i));							
+				}
+			
+				if( this.listeCase[Grille.listeComb[i]].memeTaille(this.listeCase[Grille.listeComb[i+1]], this.listeCase[Grille.listeComb[i+2]], this.listeCase[Grille.listeComb[i+3]])){
+					// Gain par les Tailles, case j à j+4
+					res.add("taille");
+					res.add(Integer.toString(i));	
+				}
+			
+				if( this.listeCase[Grille.listeComb[i]].memeInterieur(this.listeCase[Grille.listeComb[i+1]], this.listeCase[Grille.listeComb[i+2]], this.listeCase[Grille.listeComb[i+3]])){
+					// Gain par les Interieur, case j à j+4
+					res.add("interieur");
+					res.add(Integer.toString(i));	
+				}
+			
+				if( this.listeCase[Grille.listeComb[i]].memeForme(this.listeCase[Grille.listeComb[i+1]], this.listeCase[Grille.listeComb[i+2]], this.listeCase[Grille.listeComb[i+3]])){
+					// Gain par les Forme, case j à j+4
+					res.add("forme");
+					res.add(Integer.toString(i));	
+				}
+			}
+		}
+		return res;
+	}
 }

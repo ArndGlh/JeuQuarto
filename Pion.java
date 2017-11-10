@@ -14,8 +14,7 @@ public class Pion {
 		this.forme = f;
 	}
 	
-	public String toString (){
-		
+	public String toStringPion(){
 		return taille+couleur+" "+interieur+forme;
 	}
 
@@ -59,19 +58,23 @@ public class Pion {
 		this.forme = " ";
 	}
 	
+	public boolean memeTaille(Pion a, Pion b, Pion c){
+		if(a.getTaille().equals(b.getTaille()) && a.getTaille().equals(c.getTaille()) && a.getTaille().equals(this.getTaille())) return true;
+		else return false;
+	}
 	
+	public boolean memeCouleur(Pion a, Pion b, Pion c){
+		if(a.getCouleur().equals(b.getCouleur()) && a.getCouleur().equals(c.getCouleur()) && a.getCouleur().equals(this.getCouleur())) return true;
+		else return false;
+	}
 	
+	public boolean memeInterieur(Pion a, Pion b, Pion c){
+		if(a.getInterieur().equals(b.getInterieur()) && a.getInterieur().equals(c.getInterieur()) && a.getInterieur().equals(this.getInterieur())) return true;
+		else return false;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public boolean memeForme(Pion a, Pion b, Pion c){
+		if(a.getForme().equals(b.getForme()) && a.getForme().equals(c.getForme()) && a.getForme().equals(this.getForme())) return true;
+		else return false;
+	}
 }
