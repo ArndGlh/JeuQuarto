@@ -35,13 +35,24 @@ public class Grille {
 			caseRestante[i] = true;
 		}
 		
+		StringBuilder str = new StringBuilder();
 		for(int i=0; i<taille; i++){ 			   // initialisation colonneUn
-			if (i<9) colonneUn[i] = "|"+(i+1)+" | ";
-			else colonneUn[i] = "|"+(i+1)+"| ";
+			if (i<9) {
+				str.append("|");
+				str.append(i+1);
+				str.append(" | ");
+				colonneUn[i] = str.toString();
+			}
+			else {
+				str.append("|");
+				str.append(i+1);
+				str.append("| ");
+				colonneUn[i] = str.toString();
+			}
 		}
+		str.delete(0, str.length());
 
 		for(int i=0; i<taille; i++){ 			   // initialisation colonneDeux
-			
 			if(i==0) colonneDeux[i] = " |      A ";
 			else if(i==1) colonneDeux[i] = " |      B ";
 			else if(i==2) colonneDeux[i] = " |      C ";
@@ -111,13 +122,6 @@ public class Grille {
 		Grille.listeComb[37] = 6;
 		Grille.listeComb[38] = 9;
 		Grille.listeComb[39] = 12;
-		
-		// INITIALISATION LISTECASES ------------
-		
-		for(int i=0; i<this.listeCase.length; i++){
-			//this.listeCase[i] = new Pion(" ", " ", " ", " ");
-		}
-
 	}
 	
 	// ----------------------------------------------------------------------------------------------------------
@@ -166,23 +170,43 @@ public class Grille {
 	
 	public String construction (){ // Concatène la grille en String
 		
-		String res = "";
-		res += "                      1      2      3      4\n";
+		StringBuilder res = new StringBuilder();
+		res.append("                      1      2      3      4\n");
 		
 		for (int i=0; i<taille; i++){
 			
-			res += this.colonneUn[i];
-			res += this.pions[i].toStringPion();
-			res += this.colonneDeux[i];
+			res.append(this.colonneUn[i]);
+			res.append(this.pions[i].toStringPion());
+			res.append(this.colonneDeux[i]);
 			
-			if(i==0) res += this.cases[0]+this.cases[1]+this.cases[2]+this.cases[3];
-			else if(i==1) res += this.cases[4]+this.cases[5]+this.cases[6]+this.cases[7];
-			else if(i==2) res += this.cases[8]+this.cases[9]+this.cases[10]+this.cases[11];
-			else if(i==3) res += this.cases[12]+this.cases[13]+this.cases[14]+this.cases[15];
+			if(i==0) {
+				res.append(this.cases[0]);
+				res.append(this.cases[1]);
+				res.append(this.cases[2]);
+				res.append(this.cases[3]);
+			}
+			else if(i==1) {
+				res.append(this.cases[4]);
+				res.append(this.cases[5]);
+				res.append(this.cases[6]);
+				res.append(this.cases[7]);
+			}
+			else if(i==2) {
+				res.append(this.cases[8]);
+				res.append(this.cases[9]);
+				res.append(this.cases[10]);
+				res.append(this.cases[11]);
+			}
+			else if(i==3) {
+				res.append(this.cases[12]);
+				res.append(this.cases[13]);
+				res.append(this.cases[14]);
+				res.append(this.cases[15]);
+			}
 			
-			res += "\n";
+			res.append("\n");
 		}
-		return res;
+		return res.toString();
 	}
 	
 	public int recupCase (String ligne, String colonne){ // retourne l'indice dans le tableau des cases, de la case choisit

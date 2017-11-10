@@ -13,10 +13,7 @@ public class Jeu {
 	}
 	
 	public void boucleJeu() {
-		System.out.println("Règles :\nLa colonne de droite vous donne la liste des pions disponibles."
-				+ "\nChaque pion est caractérisé par 4 caractéristiques :\n- M/G : Moyen ou Grand\n- B/N : Blanc ou Noir"
-				+ "\n- V/P : Vide ou Plein\n- R/C : Rond ou Carré\n\nLe but est de former un ligne ou colonne ou diagonale"
-				+ " de quatre pions respectants un de ces critères en commun.\nL'adversaire choisit le pion que vous allez placer.\n\n\n");
+		System.out.println("Règles :\nLa colonne de droite vous donne la liste des pions disponibles.\nChaque pion est caractérisé par 4 caractéristiques :\n- M/G : Moyen ou Grand\n- B/N : Blanc ou Noir\n- V/P : Vide ou Plein\n- R/C : Rond ou Carré\n\nLe but est de former un ligne ou colonne ou diagonale de quatre pions respectants un de ces critères en commun.\nL'adversaire choisit le pion que vous allez placer.\n\n\n");
 		
 		Grille quarto = new Grille();
 		System.out.println(quarto.construction());
@@ -78,6 +75,7 @@ public class Jeu {
 			else boucle = false;
 			
 		} while (boucle);
+		sc.close();
 		return pion;
 	}
 	
@@ -93,6 +91,7 @@ public class Jeu {
 			System.out.println(question);
 			cases = sc.nextLine();
 		} while (!g.caseOk(cases));
+		sc.close();
 		return cases;
 	}
 }

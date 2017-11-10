@@ -15,7 +15,13 @@ public class Pion {
 	}
 	
 	public String toStringPion(){
-		return taille+couleur+" "+interieur+forme;
+		StringBuilder str = new StringBuilder();
+		str.append(taille);
+		str.append(couleur);
+		str.append(" ");
+		str.append(interieur);
+		str.append(forme);
+		return str.toString();
 	}
 
 	public String getTaille() {
